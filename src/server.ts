@@ -1,5 +1,7 @@
 import express from "express";
 
+import "./database";
+
 const app = express();
 
 /**
@@ -18,7 +20,7 @@ const app = express();
 
  app.post("/users", (request, response) => {
    return response.json({
-     message: "Usuário salvo com sucesso!"
+     message: "Usuário salvo com sucesso! "
    })
  })
 
