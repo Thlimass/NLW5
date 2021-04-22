@@ -12,7 +12,7 @@ io.on("connect", (socket) => {
 
     const userExists = await usersService.findByEmail(email);
 
-    if(!userExists) {
+    if (!userExists) {
       const user = await usersService.create(email);
 
       await connectionsService.create({
@@ -20,12 +20,19 @@ io.on("connect", (socket) => {
         user_id: user.id
       });
     } else {
-      await connectionsService.create({
-        socket_id,
-        user_id: userExists.id,
-      });
-    }
+      const connection = await connectionsService.findByUserId(userExists.id);
 
+      if (!connection) {
+        await connectionsService.create({
+          socket_id,
+          user_id: userExists.id,
+        });
+      } else {
+        connection.socket_id = socket_id;
+
+        await connectionsService.create(connection);
+      }
+    }
 
     //Salvar a conexão com socket_id, user_id
   });
