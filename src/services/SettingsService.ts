@@ -15,13 +15,13 @@ class SettingsService {
   }
 
   async create({ chat, username }: ISettingsCreate) {
-    
+
     //Select * from settings where username = "username" limit 1;
     const userAlreadyExists = await this.settingsRepository.findOne({
       username
     });
 
-    if(userAlreadyExists){
+    if (userAlreadyExists) {
       throw new Error("User already exists!");
     }
 
@@ -35,6 +35,21 @@ class SettingsService {
     return settings;
   }
 
+  async findByUsername(username: string) {
+    const settings = await this.settingsRepository.findOne({ username });
+
+    return settings;
+  }
+
+  async update(username: string, chat: boolean) {
+    const settings = await this.settingsRepository.createQueryBuilder().
+      update(Setting)
+      .set({ chat })
+      .where("username = :username", {
+        username
+      })
+      .execute();
+  }
 }
 
 export { SettingsService }
