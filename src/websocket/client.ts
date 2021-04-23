@@ -50,6 +50,8 @@ io.on("connect", (socket) => {
       user_id
     })
 
-    //Salvar a conexão com socket_id, user_id
+    const allMessages = await messagesService.listByUser(user_id);
+
+    socket.emit("client_first_access", allMessages);
   });
 });
